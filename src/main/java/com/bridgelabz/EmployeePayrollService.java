@@ -1,39 +1,16 @@
 package com.bridgelabz;
 
-import java.sql.*;
-import java.util.Enumeration;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 
-
-
-public class JDBCConnection {
-   static Connection connection;
-    public static void main(String[] args) {
-        connectToDatabase();
-        driversList();
-        try {
-            readEmployeePayrollData();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
-
-    public static void connectToDatabase() {
-        String jdbcURL = "jdbc:mysql://localhost:3306/payroll_service";
-        String username = "root";
-        String password = "admin";
-        try {
-            System.out.println("\n Connecting to database : " + jdbcURL);
-            connection = DriverManager.getConnection(jdbcURL, username, password);
-            System.out.println(" Connection is Successful : " + connection);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void readEmployeePayrollData()  throws SQLException {
+public class EmployeePayrollService {
+    /**
+     *  Method to get all employee payroll data
+     */
+    public void   readEmployeePayrollData() throws SQLException {
         PreparedStatement preparedStatement = JDBCConnection.connection.prepareStatement("select * from employee_payroll");
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
@@ -52,20 +29,5 @@ public class JDBCConnection {
             System.out.println(" NetPay       : " + resultSet.getString("Net_Pay"));
         }
         System.out.println("\n ***********");
-    }
-
-
-
-
-
-
-
-    public static void driversList() {
-        Enumeration<Driver> driverList = DriverManager.getDrivers();
-        System.out.println("\n List of drivers :");
-        while ((driverList.hasMoreElements())) {
-            Driver driver = (Driver) driverList.nextElement();
-            System.out.println(" " + driver.getClass().getName());
-        }
     }
 }
